@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,10 +14,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import io.github.gronnmann.coinflipper.CoinFlipper;
-import io.github.gronnmann.coinflipper.ConfigManager;
 import io.github.gronnmann.coinflipper.SQLManager;
 import io.github.gronnmann.utils.coinflipper.Debug;
-import io.github.gronnmann.utils.sql.coinflipper.SQLite;
 
 public class StatsManager implements Listener{
 	private StatsManager(){}

@@ -1,8 +1,5 @@
 package io.github.gronnmann.coinflipper.hook;
 
-import org.bukkit.entity.Player;
-
-
 public class HookPvpManager {
 	private HookPvpManager(){}
 	private static HookPvpManager hctp = new HookPvpManager();

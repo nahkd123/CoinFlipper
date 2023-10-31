@@ -7,12 +7,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import io.github.gronnmann.coinflipper.CoinFlipper;
 import io.github.gronnmann.utils.coinflipper.Debug;
-
 
 public class PagedInventoryManager implements Listener{
 	@EventHandler

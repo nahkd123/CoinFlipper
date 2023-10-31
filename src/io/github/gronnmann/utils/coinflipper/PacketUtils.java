@@ -87,7 +87,7 @@ public class PacketUtils {
 		
 		try{
 		
-			Object worldBorder = getServerClass("WorldBorder").newInstance();
+			Object worldBorder = getServerClass("WorldBorder").getDeclaredConstructor().newInstance();
 			
 			Method setCenter = worldBorder.getClass().getMethod("setCenter", double.class, double.class);
 			setCenter.invoke(worldBorder, center.getX(), center.getZ());

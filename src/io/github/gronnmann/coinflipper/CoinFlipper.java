@@ -13,7 +13,6 @@ import io.github.gronnmann.coinflipper.command.CommandsManager;
 import io.github.gronnmann.coinflipper.gui.CreationGUI;
 import io.github.gronnmann.coinflipper.gui.SelectionScreen;
 import io.github.gronnmann.coinflipper.gui.configurationeditor.FileEditSelector;
-import io.github.gronnmann.coinflipper.history.GameReminder;
 import io.github.gronnmann.coinflipper.hook.HookManager;
 import io.github.gronnmann.coinflipper.metrics.BStats;
 import io.github.gronnmann.coinflipper.stats.StatsManager;
@@ -24,115 +23,97 @@ import io.github.gronnmann.utils.coinflipper.input.InputManager;
 import io.github.gronnmann.utils.pagedinventory.coinflipper.PagedInventoryManager;
 import net.milkbowl.vault.economy.Economy;
 
-
-public class CoinFlipper extends JavaPlugin{
-	
-	private static Economy economy;
-	
-	private static CoinFlipper main;
-	
-	public static int versionId;
-	
+public class CoinFlipper extends JavaPlugin {
 	private static final String githubPluginymlUrl = "https://raw.githubusercontent.com/gronnmann/CoinFlipper/master/src/plugin.yml";
-	
-	public void onEnable(){
-		
+
+	private static Economy economy;
+	private static CoinFlipper main;
+	public static int versionId;
+
+	public void onEnable() {
 		main = this;
-		
+
 		enableEconomy();
-		
+
 		versionId = GeneralUtils.getMinecraftVersion();
 		Debug.print("Minecraft version detected: " + versionId);
-		
+
 		ConfigManager.getManager().setup();
-		
+
 		SQLManager.getManager().setup();
-				
+
 		SelectionScreen.getInstance().setup();
 		FileEditSelector.getInstance().setup();
 		StatsManager.getManager().load();
-		
+
 		AnimationFileManager.getManager().setup();
 		AnimationGUI.getManager().setup();
-		
+
 		BettingManager.getManager().load();
-		
+
 		HookManager.getManager().registerHooks();
-		
+
 		CreationGUI.getInstance().generatePreset();
-		
+
 		this.getCommand("coinflipper").setExecutor(new CommandsManager());
-		
-		
+
 		BettingTimer task = new BettingTimer();
-		task.runTaskTimerAsynchronously(this, 0, 60*20);
-		
-		
+		task.runTaskTimerAsynchronously(this, 0, 60 * 20);
+
 		Bukkit.getPluginManager().registerEvents(new PagedInventoryManager(), this);
-		
-		
+
 		Bukkit.getPluginManager().registerEvents(SelectionScreen.getInstance(), this);
 		Bukkit.getPluginManager().registerEvents(FileEditSelector.getInstance(), this);
 		Bukkit.getPluginManager().registerEvents(CreationGUI.getInstance(), this);
-		
 		Bukkit.getPluginManager().registerEvents(StatsManager.getManager(), this);
-		
-		
 		Bukkit.getPluginManager().registerEvents(AnimationGUI.getManager(), this);
-		
-		//Bukkit.getPluginManager().registerEvents(new GameReminder(), this);
-		
+		// Bukkit.getPluginManager().registerEvents(new GameReminder(), this);
+
 		InputManager.setupListeners();
-		
-		//if (versionId < 14) {
-			int versionResponse = VersionUtils.versionFromGithub(this, githubPluginymlUrl);
-			
-			if (versionResponse == VersionUtils.VERSION_NEWER){
-				System.out.println("[CoinFlipper] You are running an experimental version of CoinFlipper.");
-				System.out.println("[CoinFlipper] Expect bugs");
-			}else if (versionResponse == VersionUtils.VERSION_OLDER){
-				System.out.println("[CoinFlipper] You are using an old CoinFlipper version. Please update for best stability at:");
-				System.out.println("[CoinFlipper] https://www.spigotmc.org/resources/coinflipper.33916/");
-			}
-		//}else {
-			//System.out.print("[CoinFlipper] Could not check version of CoinFlipper. Version checking is not supported at 1.14+.");
-		//}
-		
-		
-		
-		
-		//Start metrics
+
+		int versionResponse = VersionUtils.versionFromGithub(this, githubPluginymlUrl);
+		if (versionResponse == VersionUtils.VERSION_NEWER) {
+			System.out.println("[CoinFlipper] You are running an experimental version of CoinFlipper.");
+			System.out.println("[CoinFlipper] Expect bugs");
+		} else if (versionResponse == VersionUtils.VERSION_OLDER) {
+			System.out.println(
+					"[CoinFlipper] You are using an old CoinFlipper version. Please update for best stability at:");
+			System.out.println("[CoinFlipper] https://www.spigotmc.org/resources/coinflipper.33916/");
+		}
+
+		// Start metrics
 		new BStats();
-		
+
 	}
-	
-	public void onDisable(){
+
+	public void onDisable() {
 		BettingManager.getManager().save();
-		
+
 		AnimationsManager.getManager().save();
-		
+
 		HookManager.getManager().onDisable();
-		
-		try{
+
+		try {
 			SQLManager.getManager().getSQLConnection().close();
-		}catch(Exception e){e.printStackTrace();}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
-	public boolean enableEconomy(){
+
+	public boolean enableEconomy() {
 		RegisteredServiceProvider<Economy> rsp = this.getServer().getServicesManager().getRegistration(Economy.class);
-		if (rsp == null){
+		if (rsp == null) {
 			return false;
 		}
 		economy = rsp.getProvider();
 		return economy != null;
 	}
-	
-	
-	public static Economy getEcomony(){
+
+	public static Economy getEcomony() {
 		return economy;
 	}
-	
-	public static CoinFlipper getMain(){
+
+	public static CoinFlipper getMain() {
 		return main;
 	}
 }

@@ -1,8 +1,6 @@
 package io.github.gronnmann.coinflipper.customizable;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import io.github.gronnmann.coinflipper.ConfigManager;
 import net.md_5.bungee.api.ChatColor;

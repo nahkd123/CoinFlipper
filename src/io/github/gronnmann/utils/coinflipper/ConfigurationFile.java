@@ -2,8 +2,6 @@ package io.github.gronnmann.utils.coinflipper;
 
 import java.io.File;
 
-import javax.security.auth.login.Configuration;
-
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import io.github.gronnmann.coinflipper.CoinFlipper;

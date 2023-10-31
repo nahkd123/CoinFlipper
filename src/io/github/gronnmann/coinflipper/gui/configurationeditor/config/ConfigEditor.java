@@ -11,7 +11,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 import io.github.gronnmann.coinflipper.CoinFlipper;
 import io.github.gronnmann.coinflipper.ConfigManager;
@@ -33,30 +32,17 @@ public class ConfigEditor implements Listener{
 		return instance;
 	}
 	
-	private Plugin pl;
+	// private Plugin pl;
 	protected Inventory selectionScreen;
-	
-	
 	
 	int RELOAD, BACK;
 	
 	public void setup(){
-		this.pl = CoinFlipper.getMain();
-		
-		int howManySlots = 0;
-		
-		for (ConfigVar cvars : ConfigVar.values()){
-			howManySlots++;
-		}
-		
+		// this.pl = CoinFlipper.getMain();
+		int howManySlots = ConfigVar.values().length;
 		int size = ((howManySlots/9)+2)*9;
-		
-		if (size > 54){
-			size = 54;
-		}
-		
+		if (size > 54) size = 54;
 		selectionScreen = Bukkit.createInventory(new ConfigEditorHolder(), size, "CoinFlipper config.yml");
-		
 		
 		RELOAD = size-2;
 		BACK = size-1;

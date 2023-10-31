@@ -2,16 +2,11 @@ package io.github.gronnmann.utils.sql.coinflipper;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.bukkit.plugin.Plugin;
 
 public class SQLite extends SQL{
-	
-	
 	private File databaseFile;
 	
 	public SQLite(Plugin p, String dbName){

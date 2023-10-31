@@ -1,12 +1,6 @@
 package io.github.gronnmann.coinflipper;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import io.github.gronnmann.coinflipper.animations.AnimationFileManager;

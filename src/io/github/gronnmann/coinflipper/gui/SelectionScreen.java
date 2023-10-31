@@ -35,39 +35,46 @@ import io.github.gronnmann.coinflipper.stats.StatsManager;
 import io.github.gronnmann.utils.coinflipper.Debug;
 import io.github.gronnmann.utils.coinflipper.GeneralUtils;
 import io.github.gronnmann.utils.coinflipper.ItemUtils;
+import io.github.nahkd123.comm.coinflipperpatch.Account;
 import net.milkbowl.vault.economy.EconomyResponse;
 
-public class SelectionScreen implements Listener{
-	private SelectionScreen(){}
+public class SelectionScreen implements Listener {
+	private SelectionScreen() {
+	}
+
 	private static SelectionScreen instance = new SelectionScreen();
-	public static SelectionScreen getInstance(){
+
+	public static SelectionScreen getInstance() {
 		return instance;
 	}
-	
+
 	private Plugin pl;
 	private Inventory selectionScreen;
 	private ArrayList<String> removers = new ArrayList<String>();
-	
+
 	private int CREATE = 46;
-	
-	public void setup(){
+
+	public void setup() {
 		this.pl = CoinFlipper.getMain();
 		selectionScreen = Bukkit.createInventory(new SelectionScreenHolder(), 54, Message.GUI_SELECTION.getMessage());
-		
+
 	}
-	
-	public void refreshGameManager(){
+
+	public void refreshGameManager() {
 		int amo = 0;
 		selectionScreen.clear();
-		for (Bet b : BettingManager.getManager().getBets()){
-			if (amo > 44)return;
+		for (Bet b : BettingManager.getManager().getBets()) {
+			if (amo > 44)
+				return;
 			selectionScreen.setItem(amo, getSkull(b));
 			amo++;
 		}
-		for (int i = 45; i <= 53; i++){
-			selectionScreen.setItem(i, ItemUtils.createItem(CustomMaterial.SELECTION_FILLING.getMaterial(), " ", CustomMaterial.SELECTION_FILLING.getData()));
+		for (int i = 45; i <= 53; i++) {
+			selectionScreen.setItem(i, ItemUtils.createItem(CustomMaterial.SELECTION_FILLING.getMaterial(), " ",
+					CustomMaterial.SELECTION_FILLING.getData()));
 		}
-		ItemStack help = new ItemStack(CustomMaterial.SELECTION_SYNTAX.getMaterial(), 1, (short)CustomMaterial.SELECTION_SYNTAX.getData());
+		ItemStack help = new ItemStack(CustomMaterial.SELECTION_SYNTAX.getMaterial(), 1,
+				(short) CustomMaterial.SELECTION_SYNTAX.getData());
 		ItemMeta helpM = help.getItemMeta();
 		helpM.setDisplayName(ChatColor.BOLD + Message.HELP_ITEM_L1.getMessage());
 		ArrayList<String> lores = new ArrayList<String>();
@@ -77,268 +84,243 @@ public class SelectionScreen implements Listener{
 		helpM.setLore(lores);
 		help.setItemMeta(helpM);
 		selectionScreen.setItem(49, help);
-		
-		selectionScreen.setItem(CREATE, ItemUtils.createItem(CustomMaterial.SELECTION_CREATE.getMaterial(), Message.CREATE.getMessage(), 
-				CustomMaterial.SELECTION_CREATE.getData()));
+
+		selectionScreen.setItem(CREATE, ItemUtils.createItem(CustomMaterial.SELECTION_CREATE.getMaterial(),
+				Message.CREATE.getMessage(), CustomMaterial.SELECTION_CREATE.getData()));
 	}
-	
-	public void openGameManager(Player p){
+
+	public void openGameManager(Player p) {
 		this.refreshGameManager();
 		p.openInventory(selectionScreen);
 	}
-	
-	private void generateAnimations(String p1, String p2, String winner, double moneyWon, String anim){
-		
-		String invName = Message.GUI_GAME.getMessage().replace("%PLAYER1%", p1).replace("%PLAYER2%", p2);
+
+	private void generateAnimations(Account p1, Account p2, Account winner, double moneyWon, String anim) {
+		String invName = Message.GUI_GAME.getMessage().replace("%PLAYER1%", p1.getName()).replace("%PLAYER2%", p2.getName());
 		String packageName = Bukkit.getServer().getClass().getPackage().getName();
 		int vID = Integer.parseInt(packageName.split("_")[1]);
-		
-		if (invName.length() > 32 && vID < 9){
+
+		if (invName.length() > 32 && vID < 9) {
 			invName = Message.GUI_GAME_18.getMessage();
 		}
-		
-		
-		final AnimationRunnable animation = new AnimationRunnable(p1, p2, winner, moneyWon, anim,
-				invName);
+
+		final AnimationRunnable animation = new AnimationRunnable(p1, p2, winner, moneyWon, anim, invName);
 		animation.runTaskTimer(pl, 0, 2);
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable(){
-			public void run(){
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+			public void run() {
 				animation.cancel();
 			}
-		}, (ConfigVar.FRAME_WINNER_CHOSEN.getInt()+20)*2);
-		//22 is middle
-		
-		
-		
-		
-		
-		
+		}, (ConfigVar.FRAME_WINNER_CHOSEN.getInt() + 20) * 2);
+		// 22 is middle
 	}
-	
-	
-	
-	private ItemStack getSkull(Bet b){
-		ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (byte)3);
-		SkullMeta sm = (SkullMeta)skull.getItemMeta();
-		sm.setOwner(b.getPlayer());
+
+	private ItemStack getSkull(Bet b) {
+		ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
+		SkullMeta sm = (SkullMeta) skull.getItemMeta();
+		sm.setOwner(b.getPlayer().getName());
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(Message.MENU_HEAD_PLAYER.getMessage().replace("%PLAYER%", b.getPlayer()));
-		lore.add(Message.MENU_HEAD_MONEY.getMessage().replace("%MONEY%", GeneralUtils.getFormattedNumbers(b.getAmount())));
-		int hours = b.getTimeRemaining()/60;
-		int mins = b.getTimeRemaining()-hours*60;
-		lore.add(Message.MENU_HEAD_TIMEREMAINING.getMessage().replace("%HOURS%", hours+"").replace("%MINUTES%", mins+""));
+		lore.add(Message.MENU_HEAD_PLAYER.getMessage().replace("%PLAYER%", b.getPlayer().getName()));
+		lore.add(Message.MENU_HEAD_MONEY.getMessage().replace("%MONEY%",
+				GeneralUtils.getFormattedNumbers(b.getAmount())));
+		int hours = b.getTimeRemaining() / 60;
+		int mins = b.getTimeRemaining() - hours * 60;
+		lore.add(Message.MENU_HEAD_TIMEREMAINING.getMessage().replace("%HOURS%", hours + "").replace("%MINUTES%", mins + ""));
 		String side = ".";
-		if (b.getSide() == 0){
+		if (b.getSide() == 0) {
 			side = Message.TAILS.getMessage();
-		}else{
+		} else {
 			side = Message.HEADS.getMessage();
 		}
 		lore.add(Message.MENU_HEAD_SIDE.getMessage().replace("%SIDE%", side));
 		sm.setLore(lore);
-		sm.setDisplayName(Message.MENU_HEAD_GAME.getMessage().replace("%ID%", b.getID()+""));
+		sm.setDisplayName(Message.MENU_HEAD_GAME.getMessage().replace("%ID%", b.getID() + ""));
 		skull.setItemMeta(sm);
 		return skull;
 	}
-	
-	
+
 	@EventHandler
-	public void gameAntiClicker(InventoryClickEvent e){
-		if (e.getInventory().getHolder() instanceof GameInventoryHolder){
+	public void gameAntiClicker(InventoryClickEvent e) {
+		if (e.getInventory().getHolder() instanceof GameInventoryHolder) {
 			e.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler
-	public void detectClicks(InventoryClickEvent e){
-		if (!(e.getInventory().getHolder() instanceof SelectionScreenHolder))return;
+	public void detectClicks(InventoryClickEvent e) {
+		if (!(e.getInventory().getHolder() instanceof SelectionScreenHolder))
+			return;
 		e.setCancelled(true);
-		if (e.getCurrentItem() == null)return;
-		if (e.getCurrentItem().getItemMeta()==null)return;
-		if (e.getSlot() == CREATE){
-			
-			if (CoinFlipper.getEcomony().getBalance(e.getWhoClicked().getName())
-					< ConfigVar.MIN_AMOUNT.getDouble()){
-				e.getWhoClicked().sendMessage(Message.PLACE_NOT_POSSIBLE_NOMONEY.getMessage().replace("%MINMON%", ConfigVar.MIN_AMOUNT.getDouble()+""));
+		if (e.getCurrentItem() == null)
+			return;
+		if (e.getCurrentItem().getItemMeta() == null)
+			return;
+		if (e.getSlot() == CREATE) {
+
+			if (CoinFlipper.getEcomony().getBalance(Bukkit.getOfflinePlayer(e.getWhoClicked().getUniqueId())) < ConfigVar.MIN_AMOUNT.getDouble()) {
+				e.getWhoClicked().sendMessage(Message.PLACE_NOT_POSSIBLE_NOMONEY.getMessage().replace("%MINMON%",
+						ConfigVar.MIN_AMOUNT.getDouble() + ""));
 				return;
 			}
 			CreationGUI.getInstance().openInventory((Player) e.getWhoClicked());
 		}
-		
-		
-		if (!(e.getCurrentItem().getType().equals(Material.SKULL_ITEM)))return;
-		
+
+		if (!(e.getCurrentItem().getType().equals(Material.SKULL_ITEM)))
+			return;
+
 		ItemStack item = e.getCurrentItem();
 		String ID = ChatColor.stripColor(item.getItemMeta().getDisplayName());
 		ID = ID.replace("#", "");
 		int id = GeneralUtils.getIntInString(ID);
-		
+
 		Player p = (Player) e.getWhoClicked();
 		Bet b = BettingManager.getManager().getBet(id);
-		
-		
-		//Removal of bet
-		if (e.isRightClick() 	){
-			//Own remove
-			if (p.getName().equals(b.getPlayer())){
-				if (!p.hasPermission("coinflipper.remove.self"))return;
-				if (removers.contains(p.getName())){
+
+		// Removal of bet
+		if (e.isRightClick()) {
+			// Own remove
+			if (p.getName().equals(b.getPlayer())) {
+				if (!p.hasPermission("coinflipper.remove.self"))
+					return;
+				if (removers.contains(p.getName())) {
 					BettingManager.getManager().removeBet(b);
 					this.refreshGameManager();
 					p.sendMessage(Message.BET_REMOVE_SELF_SUCCESSFUL.getMessage());
-					CoinFlipper.getEcomony().depositPlayer(p.getName(), b.getAmount());
-				}else{
+					CoinFlipper.getEcomony().depositPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), b.getAmount());
+				} else {
 					p.sendMessage(Message.BET_REMOVE_SELF_CONFIRM.getMessage());
 					removers.add(p.getName());
 					final String pN = p.getName();
-					Bukkit.getScheduler().scheduleAsyncDelayedTask(pl, new Runnable() {
-						
+
+					new BukkitRunnable() {
+						@Override
 						public void run() {
-							if (removers.contains(pN)){
-								removers.remove(pN);
-							}
+							if (removers.contains(pN)) removers.remove(pN);
 						}
-					}, 200);
+					}.runTaskAsynchronously(pl);
 				}
-				
-				
-				
-				
+
 				return;
 			}
-			//Other player
-			else{
-				if (!p.hasPermission("coinflipper.remove.other"))return;
-				if (removers.contains(p.getName())){
+			// Other player
+			else {
+				if (!p.hasPermission("coinflipper.remove.other"))
+					return;
+				if (removers.contains(p.getName())) {
 					BettingManager.getManager().removeBet(b);
 					this.refreshGameManager();
-					p.sendMessage(Message.BET_REMOVE_OTHER_SUCCESSFUL.getMessage().replace("%PLAYER%", b.getPlayer()));
-					Player bP = Bukkit.getPlayer(b.getPlayer());
-					if (bP != null){
-						bP.sendMessage(Message.BET_REMOVE_OTHER_NOTIFICATION.getMessage());
-					}
-					
-					CoinFlipper.getEcomony().depositPlayer(b.getPlayer(), b.getAmount());
-				}else{
-					p.sendMessage(Message.BET_REMOVE_OTHER_CONFIRM.getMessage().replace("%PLAYER%", b.getPlayer()));
+					p.sendMessage(Message.BET_REMOVE_OTHER_SUCCESSFUL.getMessage().replace("%PLAYER%", b.getPlayer().getName()));
+					b.getPlayer().toPlayer().ifPresent(bP -> bP.sendMessage(Message.BET_REMOVE_OTHER_NOTIFICATION.getMessage()));
+					CoinFlipper.getEcomony().depositPlayer(b.getPlayer().toOfflinePlayer(), b.getAmount());
+				} else {
+					p.sendMessage(Message.BET_REMOVE_OTHER_CONFIRM.getMessage().replace("%PLAYER%", b.getPlayer().getName()));
 					removers.add(p.getName());
 					final String pN = p.getName();
+
 					new BukkitRunnable() {
-						
 						public void run() {
-							if (removers.contains(pN)){
+							if (removers.contains(pN)) {
 								removers.remove(pN);
 							}
 						}
 					}.runTaskLater(CoinFlipper.getMain(), 200);
 				}
 			}
-			
-			
+
 			return;
 		}
-		
-		
-		//Challenging
-		//Check if player challenges himself
-		if (p.getName().equals(b.getPlayer())){
+
+		// Challenging
+		// Check if player challenges himself
+		if (p.getName().equals(b.getPlayer())) {
 			p.sendMessage(Message.BET_CHALLENGE_CANTSELF.getMessage());
 			return;
 		}
-		
-		if (GamesManager.getManager().isSpinning(b.getPlayer())){
+
+		if (GamesManager.getManager().isSpinning(b.getPlayer().getUuid())) {
 			p.sendMessage(Message.BET_CHALLENGE_ALREADYSPINNING.getMessage());
 			return;
 		}
-		
-		//Check if player can afford
+
+		// Check if player can afford
 		EconomyResponse response = CoinFlipper.getEcomony().withdrawPlayer(p, b.getAmount());
-		if (!response.transactionSuccess()){
+		if (!response.transactionSuccess()) {
 			p.sendMessage(Message.BET_CHALLENGE_NOMONEY.getMessage());
 			return;
 		}
-		
+
 		BetChallengeEvent chEvent = new BetChallengeEvent(p, b);
 		Bukkit.getPluginManager().callEvent(chEvent);
-		
-		if (chEvent.isCancelled())return;
-		
-		double winAmount = b.getAmount()*2;
+
+		if (chEvent.isCancelled())
+			return;
+
+		double winAmount = b.getAmount() * 2;
 		final double tax = ConfigVar.TAX_PERCENTAGE.getDouble();
-		winAmount = (100-tax)*winAmount/100;
-		
-		final String winner = BettingManager.getManager().challengeBet(b, p);
-		
-		 
-		//Add money stats
-		OfflinePlayer p1 = Bukkit.getOfflinePlayer(p.getName());
-		OfflinePlayer p2 = Bukkit.getOfflinePlayer(b.getPlayer());
-		
+		winAmount = (100 - tax) * winAmount / 100;
+
+		final Account winner = BettingManager.getManager().challengeBet(b, p);
+
+		// Add money stats
+		OfflinePlayer p1 = Bukkit.getOfflinePlayer(p.getUniqueId());
+		OfflinePlayer p2 = b.getPlayer().toOfflinePlayer();
+
 		StatsManager.getManager().getStats(p1.getUniqueId().toString()).addMoneySpent(b.getAmount());
 		StatsManager.getManager().getStats(p2.getUniqueId().toString()).addMoneySpent(b.getAmount());
-		
-		CoinFlipper.getEcomony().depositPlayer(Bukkit.getOfflinePlayer(winner), winAmount);
-		
-		
+		CoinFlipper.getEcomony().depositPlayer(winner.toOfflinePlayer(), winAmount);
+
 		String winnerUUID = "", loserUUID = "";
-		if (winner.equals(p1.getName())){
+		if (winner.equals(p1.getName())) {
 			winnerUUID = p1.getUniqueId().toString();
 			loserUUID = p2.getUniqueId().toString();
-		}else{
+		} else {
 			winnerUUID = p2.getUniqueId().toString();
 			loserUUID = p1.getUniqueId().toString();
 		}
-		
-		System.out.println("[CoinFlipper] Game played: " + p1.getName() + " vs " + p2.getName() + ". Winner: " + winner + "."
-				+ " Game pot: " + b.getAmount()*2 + " (won " + winAmount + " after tax of " + tax + "%)");
-		
+
+		System.out.println("[CoinFlipper] Game played: " + p1.getName() + " vs " + p2.getName() + ". Winner: " + winner
+				+ "." + " Game pot: " + b.getAmount() * 2 + " (won " + winAmount + " after tax of " + tax + "%)");
+
 		StatsManager.getManager().getStats(winnerUUID).addMoneyWon(winAmount);
 		StatsManager.getManager().getStats(loserUUID.toString()).addLose();
 		StatsManager.getManager().getStats(winnerUUID.toString()).addWin();
-		
-		//Log game
-		HistoryManager.getLogger().logGame(winnerUUID, loserUUID, winAmount, b.getAmount()*2, tax);
-		
-		//Call event
-		BetPlayEvent bpe = new BetPlayEvent(p.getName(), b.getPlayer(), winner, b.getAnimation(), winAmount, b);
+
+		// Log game
+		HistoryManager.getLogger().logGame(winnerUUID, loserUUID, winAmount, b.getAmount() * 2, tax);
+
+		// Call event
+		BetPlayEvent bpe = new BetPlayEvent(new Account(p), b.getPlayer(), winner, b.getAnimation(), winAmount, b);
 		Bukkit.getPluginManager().callEvent(bpe);
-		
-		
-		
-		if (b.getAnimation() == null){
+
+		if (b.getAnimation() == null) {
 			b.setAnimation(AnimationsManager.getManager().getDefault());
 		}
-		
-		//Create animations
-		
-		Debug.print(p.getName());
-		Debug.print(b.getPlayer());
-		Debug.print(b.getAnimation().getName());
-		
-		GamesManager.getManager().setSpinning(p.getName(), true);
-		GamesManager.getManager().setSpinning(b.getPlayer(), true);
-		
-		this.generateAnimations(p.getName(), b.getPlayer(), winner, winAmount, b.getAnimation().getName());
-		if (!ConfigVar.ANIMATIONS_ENABLED.getBoolean()) {
-			p.closeInventory();
-		}
-		
-		
-		this.refreshGameManager();
 
+		// Create animations
+
+		Debug.print(p.getName());
+		Debug.print(b.getPlayer().toString());
+		Debug.print(b.getAnimation().getName());
+
+		GamesManager.getManager().setSpinning(p.getUniqueId(), true);
+		GamesManager.getManager().setSpinning(b.getPlayer().getUuid(), true);
+
+		this.generateAnimations(new Account(p), b.getPlayer(), winner, winAmount, b.getAnimation().getName());
+		if (!ConfigVar.ANIMATIONS_ENABLED.getBoolean()) p.closeInventory();
+		this.refreshGameManager();
 	}
-	
+
 	@EventHandler
 	public void cancelDrag(InventoryDragEvent e) {
-		if (e.getInventory().getHolder() instanceof SelectionScreenHolder)e.setCancelled(true);
+		if (e.getInventory().getHolder() instanceof SelectionScreenHolder)
+			e.setCancelled(true);
 	}
-	
+
 }
 
-class SelectionScreenHolder implements InventoryHolder{
+class SelectionScreenHolder implements InventoryHolder {
 
 	@Override
 	public Inventory getInventory() {
 		return null;
 	}
-	
+
 }

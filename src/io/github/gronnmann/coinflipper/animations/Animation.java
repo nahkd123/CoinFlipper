@@ -12,116 +12,113 @@ import org.bukkit.inventory.ItemStack;
 import io.github.gronnmann.coinflipper.gui.GameInventoryHolder;
 import io.github.gronnmann.utils.coinflipper.ItemUtils;
 
-
 public class Animation {
-	
-	
 	private FileConfiguration animationFile;
 	private File file;
 	private boolean isDefault;
-	
-	public Animation(FileConfiguration animationFile, File file){
+
+	public Animation(FileConfiguration animationFile, File file) {
 		this.animationFile = animationFile;
 		this.file = file;
 		this.isDefault = false;
 	}
-	
+
 	public ArrayList<Inventory> animationInventory = new ArrayList<Inventory>();
-	
-	public void copy(Animation copyInto){
+
+	@SuppressWarnings("unchecked")
+	public void copy(Animation copyInto) {
 		copyInto.animationInventory = (ArrayList<Inventory>) this.animationInventory.clone();
 	}
-	
-	public void draw(){
-		//Draw for every frame
-		if (animationFile.getString("animation") == null){
-			for (int frame = 0; frame <= 50; frame++){
+
+	public void draw() {
+		// Draw for every frame
+		if (animationFile.getString("animation") == null) {
+			for (int frame = 0; frame <= 50; frame++) {
 				Inventory frameInv = Bukkit.createInventory(new GameInventoryHolder(), 45);
 				animationInventory.add(frame, frameInv);
 			}
 			return;
 		}
-		
-		for (int frame = 0; frame <= 50; frame++){
+
+		for (int frame = 0; frame <= 50; frame++) {
 			Inventory frameInv = Bukkit.createInventory(new GameInventoryHolder(), 45);
-			//For every slot
-			for (int slot = 0; slot <= 44; slot++){
+			// For every slot
+			for (int slot = 0; slot <= 44; slot++) {
 				Material forSlot = null;
-				
-				try{
-					forSlot = Material.valueOf(animationFile.getString("animation." + frame + "."+slot + ".material"));
-				}catch(Exception e){
+
+				try {
+					forSlot = Material
+							.valueOf(animationFile.getString("animation." + frame + "." + slot + ".material"));
+				} catch (Exception e) {
 					forSlot = Material.AIR;
 				}
-				
-				
-				short data = (short)animationFile.getInt("animation." + frame + "."+slot + ".data");
-				ItemStack item = new ItemStack(forSlot, 1, (short)data);
-				
-				if (item.getType() != Material.AIR){
-					ItemUtils.setName(item, animationFile.getString("animation." + frame + "."+slot + ".name"));
+
+				short data = (short) animationFile.getInt("animation." + frame + "." + slot + ".data");
+				ItemStack item = new ItemStack(forSlot, 1, (short) data);
+
+				if (item.getType() != Material.AIR) {
+					ItemUtils.setName(item, animationFile.getString("animation." + frame + "." + slot + ".name"));
 				}
-				
+
 				frameInv.setItem(slot, item);
 			}
 			animationInventory.add(frame, frameInv);
 		}
 	}
-	
-	public void save(){
-		
-		
-		for (int frame = 0; frame <= 50; frame++){
+
+	@SuppressWarnings("deprecation")
+	public void save() {
+		for (int frame = 0; frame <= 50; frame++) {
 			Inventory inv = animationInventory.get(frame);
-			for (int slot = 0; slot <= 44; slot++){
+			for (int slot = 0; slot <= 44; slot++) {
 				ItemStack item = inv.getItem(slot);
-				if (item != null){
-					animationFile.set("animation."+frame+"."+slot+".material", item.getType().toString());
-					animationFile.set("animation."+frame+"."+slot+".data", item.getData().getData());
-					if (item.getItemMeta() != null){
-						animationFile.set("animation."+frame+"."+slot+".name", item.getItemMeta().getDisplayName());
-					}else{
-						animationFile.set("animation."+frame+"."+slot+".name", " ");
+				if (item != null) {
+					animationFile.set("animation." + frame + "." + slot + ".material", item.getType().toString());
+					animationFile.set("animation." + frame + "." + slot + ".data", item.getData().getData());
+					if (item.getItemMeta() != null) {
+						animationFile.set("animation." + frame + "." + slot + ".name", item.getItemMeta().getDisplayName());
+					} else {
+						animationFile.set("animation." + frame + "." + slot + ".name", " ");
 					}
 				}
-				
-				
+
 			}
 		}
-		
+
 		try {
 			animationFile.save(file);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	public ArrayList<Inventory> getFrames(){
+
+	public ArrayList<Inventory> getFrames() {
 		return animationInventory;
 	}
-	public void setFrame(int frame, Inventory window){
+
+	public void setFrame(int frame, Inventory window) {
 		animationInventory.set(frame, window);
 	}
-	public Inventory getFrame(int frame){
+
+	public Inventory getFrame(int frame) {
 		return animationInventory.get(frame);
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		String name = file.getName();
-		name = name.substring(0, name.length()-4);
+		name = name.substring(0, name.length() - 4);
 		return name;
 	}
-	
-	public File getFile(){
+
+	public File getFile() {
 		return file;
 	}
-	
-	public boolean isDefault(){
+
+	public boolean isDefault() {
 		return isDefault;
 	}
-	
-	protected void setDefault(boolean bool){
+
+	protected void setDefault(boolean bool) {
 		this.isDefault = bool;
 	}
 }

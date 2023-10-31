@@ -2,15 +2,15 @@ package io.github.gronnmann.coinflipper.bets;
 
 import io.github.gronnmann.coinflipper.animations.Animation;
 import io.github.gronnmann.coinflipper.customizable.ConfigVar;
+import io.github.nahkd123.comm.coinflipperpatch.Account;
 
 public class Bet {
-	private String player;
+	private Account player;
 	private int bet, id, minsRemaining, booster;
 	private Animation animation;
 	private double amount;
-	
-	
-	public Bet(String player, int bet, double amount, int id, int booster, Animation animation){
+
+	public Bet(Account player, int bet, double amount, int id, int booster, Animation animation) {
 		this.player = player;
 		this.bet = bet;
 		this.amount = amount;
@@ -19,34 +19,40 @@ public class Bet {
 		this.booster = booster;
 		this.animation = animation;
 	}
-	
-	
-	public String getPlayer(){
+
+	public Account getPlayer() {
 		return player;
 	}
-	public int getSide(){
+
+	public int getSide() {
 		return bet;
 	}
-	public double getAmount(){
+
+	public double getAmount() {
 		return amount;
 	}
-	public int getID(){
+
+	public int getID() {
 		return id;
 	}
-	public int getBooster(){
+
+	public int getBooster() {
 		return booster;
-	}	
-	public int getTimeRemaining(){
+	}
+
+	public int getTimeRemaining() {
 		return minsRemaining;
 	}
-	public void setTimeRemaining(int time){
+
+	public void setTimeRemaining(int time) {
 		this.minsRemaining = time;
 	}
-	public Animation getAnimation(){
+
+	public Animation getAnimation() {
 		return animation;
 	}
-	public void setAnimation(Animation animation){
+
+	public void setAnimation(Animation animation) {
 		this.animation = animation;
 	}
 }
-

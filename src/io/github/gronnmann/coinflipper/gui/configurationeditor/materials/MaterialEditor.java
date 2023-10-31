@@ -38,25 +38,13 @@ public class MaterialEditor implements Listener{
 	
 	public void setup(Plugin pl){
 		this.pl = pl;
-		
-		int howManySlots = 0;
-		
-		for (CustomMaterial materials : CustomMaterial.values()){
-			howManySlots++;
-		}
-		
+		int howManySlots = CustomMaterial.values().length;
 		int size = ((howManySlots/9)+2)*9;
-		
-		if (size > 54){
-			size = 54;
-		}
+		if (size > 54) size = 54;
 		
 		selectionScreen = Bukkit.createInventory(new MaterialsEditorHolder(), size, "CoinFlipper materials.yml");
-		
-		
 		RELOAD = size-2;
 		BACK = size-1;
-		
 		
 		int index = 0;
 		
@@ -68,7 +56,6 @@ public class MaterialEditor implements Listener{
 			
 			Material toUse = materials.getMaterial();
 			int data = materials.getData();
-			
 			
 			selectionScreen.setItem(index, ItemUtils.addToLore(ItemUtils.addToLore(ItemUtils.createItem(toUse, ChatColor.GOLD + cvars, data), ChatColor.YELLOW + "Material: " + 
 			ChatColor.GREEN + materials.getMaterial().toString()), ChatColor.YELLOW + "Data: " + 

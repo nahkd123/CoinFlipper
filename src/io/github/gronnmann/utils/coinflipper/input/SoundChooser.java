@@ -16,7 +16,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import io.github.gronnmann.coinflipper.CoinFlipper;
 import io.github.gronnmann.coinflipper.customizable.Message;
-import io.github.gronnmann.utils.coinflipper.Debug;
 import io.github.gronnmann.utils.coinflipper.ItemUtils;
 import io.github.gronnmann.utils.coinflipper.input.InputData.InputType;
 import io.github.gronnmann.utils.pagedinventory.coinflipper.PagedInventory;

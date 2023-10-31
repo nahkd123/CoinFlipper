@@ -1,22 +1,16 @@
 package io.github.gronnmann.utils.coinflipper.input;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InputData {
-	
-
 	public enum InputType {INTEGER, DOUBLE, STRING, TEXT, BOOLEAN, SOUND, MATERIAL}
 
-	
 	private double MIN = 0, MAX = 0;
 	private boolean limitUp = false, limitDown = false;
 	private InputType inputType;
 	
 	private HashMap<String, Object> extraData = new HashMap<String, Object>();
-	
-	
-	
+
 	private long createdMoment;
 	
 	private String id, exit = "exit";

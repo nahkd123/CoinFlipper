@@ -8,6 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import io.github.nahkd123.comm.coinflipperpatch.Account;
+
 public class ItemUtils {
 	
 	public static Material[] tool = {Material.DIAMOND_PICKAXE, Material.DIAMOND_AXE, Material.DIAMOND_SPADE, Material.DIAMOND_HOE,
@@ -123,10 +125,10 @@ public class ItemUtils {
 		return item;
 	}
 	
-	public static ItemStack getSkull(String name){
+	public static ItemStack getSkull(Account name){
 		ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
 		SkullMeta itemMeta = (SkullMeta) item.getItemMeta();
-		itemMeta.setOwner(name);
+		itemMeta.setOwner(name.getName());
 		item.setItemMeta(itemMeta);
 		return item;
 	}
