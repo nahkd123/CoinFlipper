@@ -31,24 +31,26 @@ public class Animation {
 	}
 
 	public void draw() {
-		// Draw for every frame
+		// Create default animation
 		if (animationFile.getString("animation") == null) {
 			for (int frame = 0; frame <= 50; frame++) {
 				Inventory frameInv = Bukkit.createInventory(new GameInventoryHolder(), 45);
 				animationInventory.add(frame, frameInv);
 			}
+
 			return;
 		}
 
-		for (int frame = 0; frame <= 50; frame++) {
+		// Draw animation
+		int configuredFrames = animationFile.getConfigurationSection("animation").getKeys(false).size();
+		for (int frame = 0; frame < configuredFrames; frame++) {
 			Inventory frameInv = Bukkit.createInventory(new GameInventoryHolder(), 45);
 			// For every slot
 			for (int slot = 0; slot <= 44; slot++) {
 				Material forSlot = null;
 
 				try {
-					forSlot = Material
-							.valueOf(animationFile.getString("animation." + frame + "." + slot + ".material"));
+					forSlot = Material.valueOf(animationFile.getString("animation." + frame + "." + slot + ".material"));
 				} catch (Exception e) {
 					forSlot = Material.AIR;
 				}
@@ -68,7 +70,7 @@ public class Animation {
 
 	@SuppressWarnings("deprecation")
 	public void save() {
-		for (int frame = 0; frame <= 50; frame++) {
+		for (int frame = 0; frame < getFramesCount(); frame++) {
 			Inventory inv = animationInventory.get(frame);
 			for (int slot = 0; slot <= 44; slot++) {
 				ItemStack item = inv.getItem(slot);
@@ -96,11 +98,17 @@ public class Animation {
 		return animationInventory;
 	}
 
+	public int getFramesCount() {
+		return animationInventory.size();
+	}
+
 	public void setFrame(int frame, Inventory window) {
+		while (frame >= getFramesCount()) animationInventory.add(Bukkit.createInventory(new GameInventoryHolder(), 45));
 		animationInventory.set(frame, window);
 	}
 
 	public Inventory getFrame(int frame) {
+		while (frame >= getFramesCount()) animationInventory.add(Bukkit.createInventory(new GameInventoryHolder(), 45));
 		return animationInventory.get(frame);
 	}
 

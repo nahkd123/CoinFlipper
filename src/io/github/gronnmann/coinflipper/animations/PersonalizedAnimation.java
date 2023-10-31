@@ -3,6 +3,7 @@ package io.github.gronnmann.coinflipper.animations;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import io.github.gronnmann.coinflipper.customizable.ConfigVar;
 import io.github.gronnmann.coinflipper.customizable.Message;
 import io.github.gronnmann.utils.coinflipper.InventoryUtils;
 import io.github.gronnmann.utils.coinflipper.ItemUtils;
@@ -45,7 +46,7 @@ public class PersonalizedAnimation {
 					fram.setItem(slot, winnerSkull);
 					break;
 				default:
-					if (frame < 30) {
+					if (frame < ConfigVar.FRAME_WINNER_CHOSEN.getInt()) {
 						if (frame % 2 == 0) {
 							fram.setItem(slot, ItemUtils.setName(item,
 									ChatColor.YELLOW + Message.ANIMATION_ROLL_ROLLING.getMessage()));

@@ -47,7 +47,6 @@ public class ConfigEditor implements Listener{
 		RELOAD = size-2;
 		BACK = size-1;
 		
-		
 		int index = 0;
 		
 		for (ConfigVar cvarsSrc : ConfigVar.values()){

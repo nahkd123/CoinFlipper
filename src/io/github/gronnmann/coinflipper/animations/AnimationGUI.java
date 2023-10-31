@@ -329,13 +329,12 @@ public class AnimationGUI implements Listener {
 		Animation anim = AnimationsManager.getManager().getAnimation(animationName);
 
 		if (e.getSlot() == NEXT) {
-			if (frameId == 50)
-				return;
+			// @nahkd123: Allow user to create animation with more than 50 frames
+			// if (frameId == 50) return;
 
 			AnimationFrameChangeEvent frameChange = new AnimationFrameChangeEvent(anim, frameId, frameId + 1);
 			Bukkit.getPluginManager().callEvent(frameChange);
-			if (frameChange.isCancelled())
-				return;
+			if (frameChange.isCancelled()) return;
 
 			this.saveFrame(anim, frameId, e.getInventory());
 			p.openInventory(this.getEditor(anim, frameId + 1));
