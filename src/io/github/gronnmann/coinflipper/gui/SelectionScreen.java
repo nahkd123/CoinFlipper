@@ -265,7 +265,9 @@ public class SelectionScreen implements Listener {
 
 		StatsManager.getManager().getStats(p1.getUniqueId().toString()).addMoneySpent(b.getAmount());
 		StatsManager.getManager().getStats(p2.getUniqueId().toString()).addMoneySpent(b.getAmount());
-		CoinFlipper.getEcomony().depositPlayer(winner.toOfflinePlayer(), winAmount);
+
+		// Revert "5ffecd9dad25b8c3e70a2876cafb8e56db81b7e6"
+		// CoinFlipper.getEcomony().depositPlayer(winner.toOfflinePlayer(), winAmount);
 
 		String winnerUUID = "", loserUUID = "";
 		if (winner.equals(p1.getName())) {

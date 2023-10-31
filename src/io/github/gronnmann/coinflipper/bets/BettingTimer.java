@@ -15,10 +15,7 @@ public class BettingTimer extends BukkitRunnable {
 
 		for (Bet b : BettingManager.getManager().getBets()) {
 			b.setTimeRemaining(b.getTimeRemaining() - 1);
-
-			if (b.getTimeRemaining() == 0) {
-				toRemove.add(b);
-			}
+			if (b.getTimeRemaining() <= 0) toRemove.add(b);
 		}
 
 		for (Bet b : toRemove) {

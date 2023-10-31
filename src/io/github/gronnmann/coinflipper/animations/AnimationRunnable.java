@@ -5,6 +5,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import io.github.gronnmann.coinflipper.CoinFlipper;
 import io.github.gronnmann.coinflipper.GamesManager;
 import io.github.gronnmann.coinflipper.customizable.ConfigVar;
 import io.github.gronnmann.coinflipper.customizable.Message;
@@ -30,11 +31,9 @@ public class AnimationRunnable extends BukkitRunnable {
 		this.phase = 0;
 		this.winMoney = winMoney;
 		this.winMoneyFormatted = GeneralUtils.getFormattedNumbers(winMoney);
-
 		this.winFrame = ConfigVar.ANIMATIONS_ENABLED.getBoolean() ? ConfigVar.FRAME_WINNER_CHOSEN.getInt() : 1;
 
 		Animation anim = AnimationsManager.getManager().getAnimation(animationS);
-
 		animation = new PersonalizedAnimation(anim, winner, s1, s2, inventoryName);
 	}
 
@@ -48,8 +47,11 @@ public class AnimationRunnable extends BukkitRunnable {
 		if (!ConfigVar.ANIMATION_ONLY_CHALLENGER.getBoolean()) showAnimationFor(p2);
 
 		if (phase == winFrame) {
-
-			// Give money -- MOVED TO START OF SPIN INCASE OF SERVER CRASH/TURNOFF
+			// Revert "Give money -- MOVED TO START OF SPIN INCASE OF SERVER CRASH/TURNOFF"
+			// Commit hash = 5ffecd9dad25b8c3e70a2876cafb8e56db81b7e6
+			// A guy commissioned me to move the give money back at the end of spin
+			// TODO Give all money when onDisable() invoked
+			CoinFlipper.getEcomony().depositPlayer(winner.toOfflinePlayer(), winMoney);
 
 			// Sound
 			try {
