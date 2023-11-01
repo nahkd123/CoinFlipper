@@ -181,8 +181,7 @@ public class SelectionScreen implements Listener {
 		if (e.isRightClick()) {
 			// Own remove
 			if (p.getUniqueId().equals(b.getPlayer().getUuid())) {
-				if (!p.hasPermission("coinflipper.remove.self"))
-					return;
+				if (!p.hasPermission("coinflipper.remove.self")) return;
 				if (removers.contains(p.getUniqueId())) {
 					BettingManager.getManager().removeBet(b);
 					this.refreshGameManager();
@@ -198,15 +197,14 @@ public class SelectionScreen implements Listener {
 						public void run() {
 							if (removers.contains(pU)) removers.remove(pU);
 						}
-					}.runTaskAsynchronously(pl);
+					}.runTaskLaterAsynchronously(pl, 200);
 				}
 
 				return;
 			}
 			// Other player
 			else {
-				if (!p.hasPermission("coinflipper.remove.other"))
-					return;
+				if (!p.hasPermission("coinflipper.remove.other")) return;
 				if (removers.contains(p.getUniqueId())) {
 					BettingManager.getManager().removeBet(b);
 					this.refreshGameManager();
