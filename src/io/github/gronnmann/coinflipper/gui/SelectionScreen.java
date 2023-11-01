@@ -1,6 +1,9 @@
 package io.github.gronnmann.coinflipper.gui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -50,7 +53,7 @@ public class SelectionScreen implements Listener {
 
 	private Plugin pl;
 	private Inventory selectionScreen;
-	private ArrayList<String> removers = new ArrayList<String>();
+	private Set<UUID> removers = new HashSet<UUID>();
 
 	private int CREATE = 46;
 
@@ -180,20 +183,20 @@ public class SelectionScreen implements Listener {
 			if (p.getUniqueId().equals(b.getPlayer().getUuid())) {
 				if (!p.hasPermission("coinflipper.remove.self"))
 					return;
-				if (removers.contains(p.getName())) {
+				if (removers.contains(p.getUniqueId())) {
 					BettingManager.getManager().removeBet(b);
 					this.refreshGameManager();
 					p.sendMessage(Message.BET_REMOVE_SELF_SUCCESSFUL.getMessage());
 					CoinFlipper.getEcomony().depositPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), b.getAmount());
 				} else {
 					p.sendMessage(Message.BET_REMOVE_SELF_CONFIRM.getMessage());
-					removers.add(p.getName());
-					final String pN = p.getName();
+					removers.add(p.getUniqueId());
+					final UUID pU = p.getUniqueId();
 
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							if (removers.contains(pN)) removers.remove(pN);
+							if (removers.contains(pU)) removers.remove(pU);
 						}
 					}.runTaskAsynchronously(pl);
 				}
@@ -204,7 +207,7 @@ public class SelectionScreen implements Listener {
 			else {
 				if (!p.hasPermission("coinflipper.remove.other"))
 					return;
-				if (removers.contains(p.getName())) {
+				if (removers.contains(p.getUniqueId())) {
 					BettingManager.getManager().removeBet(b);
 					this.refreshGameManager();
 					p.sendMessage(Message.BET_REMOVE_OTHER_SUCCESSFUL.getMessage().replace("%PLAYER%", b.getPlayer().getName()));
@@ -212,14 +215,12 @@ public class SelectionScreen implements Listener {
 					CoinFlipper.getEcomony().depositPlayer(b.getPlayer().toOfflinePlayer(), b.getAmount());
 				} else {
 					p.sendMessage(Message.BET_REMOVE_OTHER_CONFIRM.getMessage().replace("%PLAYER%", b.getPlayer().getName()));
-					removers.add(p.getName());
-					final String pN = p.getName();
+					removers.add(p.getUniqueId());
+					final UUID pU = p.getUniqueId();
 
 					new BukkitRunnable() {
 						public void run() {
-							if (removers.contains(pN)) {
-								removers.remove(pN);
-							}
+							if (removers.contains(pU)) removers.remove(pU);
 						}
 					}.runTaskLater(CoinFlipper.getMain(), 200);
 				}
