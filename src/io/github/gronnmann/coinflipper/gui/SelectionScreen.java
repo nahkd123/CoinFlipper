@@ -177,7 +177,7 @@ public class SelectionScreen implements Listener {
 		// Removal of bet
 		if (e.isRightClick()) {
 			// Own remove
-			if (p.getName().equals(b.getPlayer())) {
+			if (p.getUniqueId().equals(b.getPlayer().getUuid())) {
 				if (!p.hasPermission("coinflipper.remove.self"))
 					return;
 				if (removers.contains(p.getName())) {
@@ -230,7 +230,7 @@ public class SelectionScreen implements Listener {
 
 		// Challenging
 		// Check if player challenges himself
-		if (p.getName().equals(b.getPlayer())) {
+		if (p.getUniqueId().equals(b.getPlayer().getUuid())) {
 			p.sendMessage(Message.BET_CHALLENGE_CANTSELF.getMessage());
 			return;
 		}
@@ -270,7 +270,7 @@ public class SelectionScreen implements Listener {
 		// CoinFlipper.getEcomony().depositPlayer(winner.toOfflinePlayer(), winAmount);
 
 		String winnerUUID = "", loserUUID = "";
-		if (winner.equals(p1.getName())) {
+		if (winner.getUuid().equals(p1.getUniqueId())) {
 			winnerUUID = p1.getUniqueId().toString();
 			loserUUID = p2.getUniqueId().toString();
 		} else {
